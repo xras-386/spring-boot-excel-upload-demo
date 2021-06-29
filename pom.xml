@@ -471,5 +471,12 @@
 
         </plugins>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub xras-386 Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/xras-386/spring-boot-excel-upload-demo</url>
+        </repository>
+    </distributionManagement>
 
 </project>
