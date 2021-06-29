@@ -51,7 +51,7 @@
                     }
                 });
             } else {
-                toastr.error('Please select your image to upload First!', 'Invalid Upload');
+                toastr.error('Bitte zuerst Exceldatei auswählen!', 'Invalid Upload');
             }
         };
         
