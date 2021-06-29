@@ -6,7 +6,7 @@
 
     <groupId>com.github.xras386</groupId>
     <artifactId>spring-boot-excel-upload-demo</artifactId>
-    <version>1.0.2</version>
+    <version>1.0-SNAPSHOT</version>
 
 
 
