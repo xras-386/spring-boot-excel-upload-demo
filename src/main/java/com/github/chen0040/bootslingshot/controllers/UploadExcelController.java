@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Executors;
+import org.springframework.web.client.RestTemplate;
 
 
 /**
@@ -80,51 +81,64 @@ public class UploadExcelController {
          executor.submit(() -> {
             try {
                UploadEvent event = new UploadEvent();
-               event.setState("Uploaded filed received on server");
+               event.setState("Datei wurde gespeichert");
                event.setEventType("start");
                brokerMessagingTemplate.convertAndSend("/topics/event", JSON.toJSONString(event, SerializerFeature.BrowserCompatible));
 
                final FileInputStream inputStream = new FileInputStream(filepath);
-               DataTable table = ExcelTable.load(() -> inputStream);
+               // hier Excelkonvertierung aufruffen
+               // und dabei Dateinamen übergeben.
+               // http://localhost:8090/cp/filepath
+               cpFiles("http://localhost:8090/cp/"+label);
+               
+               // später angucken
+//               DataTable table = ExcelTable.load(() -> inputStream);
+//
+//               int rowCount = table.rowCount();
+//
+//               for(int i=0; i < rowCount; ++i) {
+//                  DataRow row = table.row(i);
+//
+//                  String name = row.cell("name");
+//                  String price = row.cell("price");
+//                  String weight = row.cell("weight");
+//                  String width = row.cell("width");
+//                  String height = row.cell("height");
+//                  String description = row.cell("description");
+//
+//                  Product product = new Product();
+//                  product.setName(name);
+//                  product.setSku(UUID.randomUUID().toString());
+//                  product.setPrice(Double.parseDouble(price));
+//                  product.setWeight(Double.parseDouble(weight));
+//                  product.getAttributes().put("width", width);
+//                  product.getAttributes().put("height", height);
+//                  product.getAttributes().put("description", description);
+//                  product.setVendor(getVendor(token));
+//
+//                  logger.info("Saving product: {}", product.getName());
+//                  productApi.saveProduct(product);
+//
+//                  event = new UploadEvent();
+//                  event.setState(product);
+//                  event.setEventType("progress");
+//                  brokerMessagingTemplate.convertAndSend("/topics/event", JSON.toJSONString(event, SerializerFeature.BrowserCompatible));
+//
+//                  Thread.sleep(5000L);
+//               }
 
-               int rowCount = table.rowCount();
-
-               for(int i=0; i < rowCount; ++i) {
-                  DataRow row = table.row(i);
-
-                  String name = row.cell("name");
-                  String price = row.cell("price");
-                  String weight = row.cell("weight");
-                  String width = row.cell("width");
-                  String height = row.cell("height");
-                  String description = row.cell("description");
-
-                  Product product = new Product();
-                  product.setName(name);
-                  product.setSku(UUID.randomUUID().toString());
-                  product.setPrice(Double.parseDouble(price));
-                  product.setWeight(Double.parseDouble(weight));
-                  product.getAttributes().put("width", width);
-                  product.getAttributes().put("height", height);
-                  product.getAttributes().put("description", description);
-                  product.setVendor(getVendor(token));
-
-                  logger.info("Saving product: {}", product.getName());
-                  productApi.saveProduct(product);
-
-                  event = new UploadEvent();
-                  event.setState(product);
-                  event.setEventType("progress");
-                  brokerMessagingTemplate.convertAndSend("/topics/event", JSON.toJSONString(event, SerializerFeature.BrowserCompatible));
-
-                  Thread.sleep(5000L);
-               }
-
-
+               
+               
+               // event = new UploadEvent();
+               // event.setState("Datei wird konvertiert, bald liegt diese als Exportlink bereit");
+               // fh.delete();
+               // event.setEventType("progress");
+               // brokerMessagingTemplate.convertAndSend("/topics/event", JSON.toJSONString(event, SerializerFeature.BrowserCompatible));
+               
                event = new UploadEvent();
-               event.setState("Uploaded filed deleted on server");
-               fh.delete();
-               event.setEventType("end");
+               event.setState("Datei wurde konvertiert, diese liegt als Exportlink bereit: 'letzter Export zum Download'");
+               event.setEventType("end"); 
+               Thread.sleep(10000);
                brokerMessagingTemplate.convertAndSend("/topics/event", JSON.toJSONString(event, SerializerFeature.BrowserCompatible));
 
             }catch(Exception ex) {
@@ -146,4 +160,13 @@ public class UploadExcelController {
       }
 
    }
+   
+   private static void cpFiles(String uri){
+    
+
+    RestTemplate restTemplate = new RestTemplate();
+    String result = restTemplate.getForObject(uri, String.class);
+
+    System.out.println(result);
+}
 }
