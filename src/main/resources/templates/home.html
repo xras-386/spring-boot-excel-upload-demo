@@ -13,31 +13,36 @@
 
 <div ng-app="client" ng-controller="clientController">
 
-    <h1>Products On Servers</h1>
-    <p>There are <b>{{products.length}} products</b> on Server.</p>
+    <h1>AKELA Beta</h1>
+    <!--p>There are <b>{{products.length}} products</b> on Server.</p-->
     <br />
     <hr />
 
-    <h1>Demo for Excel Upload</h1>
+    <h2>Beispiel Excel  Download</h2>
 
-    <a href="/samples/products.xlsx" target="_blank">Excel Sample Download</a>
-
+    <a href="/samples/example.xlsx" target="_blank">Importbeispiel</a>
+    <br/>
     <hr />
-
+    <h2>Excel Upload</h2>
     <input class="form-control" type = "file" product-excel-upload ng-model="productExcel"/>
     <button ng-click="uploadProductExcel()">Upload Excel</button>
 
     <br />
     <hr />
+    <h2>Letzer Export als Download</h2>
 
-    <h1>Demo for CSV Upload</h1>
+    
+    <a href="/samples/products.xlsx" target="_blank">Exportdatei</a><br/>
+    <hr />
+    
+    <!--h1>Demo for CSV Upload</h1>
 
     <a href="/samples/products.csv" target="_blank">CSV Sample Download</a>
 
     <hr />
 
     <input class="form-control" type = "file" product-csv-upload ng-model="productCsv"/>
-    <button ng-click="uploadProductCsv()">Upload CSV</button>
+    <button ng-click="uploadProductCsv()">Upload CSV</button-->
 
 </div>
 
@@ -63,4 +68,26 @@
 <script src="/js/client-controller.js" type="text/javascript"></script>
 
 </body>
+    <script type="text/javascript">
+    var idleTime = 0;
+    $(document).ready(function () {
+        // Increment the idle time counter every minute.
+        var idleInterval = setInterval(timerIncrement, 60000); // 1 minute
+
+        // Zero the idle timer on mouse movement.
+        $(this).mousemove(function (e) {
+            idleTime = 0;
+        });
+        $(this).keypress(function (e) {
+            idleTime = 0;
+        });
+    });
+
+    function timerIncrement() {
+        idleTime = idleTime + 1;
+        if (idleTime > 1) { // 20 minutes
+            window.location.reload();
+        }
+    }
+</script>
 </html>
